@@ -1,0 +1,4 @@
+name: Freeze
+version: '${project.version}'
+main: by.quaks.freeze.Freeze
+api-version: 1.19

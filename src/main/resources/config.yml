@@ -2,6 +2,7 @@ Freeze-form: "%player-name% has been frozen! %button%"
 Unfrozen-form: "%player-name% has been unfrozen! %button%"
 Offline: "%player-name% is offline."
 PlayerNameColor: "AQUA"
+Permission: "You don't have permission to execute this command."
 Button:
   Freeze:
     Label: "[Freeze]"

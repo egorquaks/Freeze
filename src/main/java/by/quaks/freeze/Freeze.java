@@ -20,41 +20,46 @@ public class Freeze implements CommandExecutor, TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Player victim = Bukkit.getPlayerExact(args[0]);
-        if (victim != null && victim.isOnline()) {
-            TextComponent button = new TextComponent();
-            button.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/freeze "+victim.getDisplayName()));
-            TextComponent victimName = new TextComponent(victim.getDisplayName());
-            victimName.setColor(getColor(Config.get().getString("PlayerNameColor")));
-            if(!victim.getScoreboardTags().contains("Frozen")){
-                //ЗАМОРАЖИВАЕМ
-                button.setText(Config.get().getString("Button.Unfreeze.Label"));
-                button.setColor(getColor(Config.get().getString("Button.Unfreeze.Color")));
-                button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Config.get().getString("Button.Freeze.HoverText").replaceAll("%player-name%", victim.getDisplayName())).color(ChatColor.GRAY).create()));
+        if(sender.hasPermission("freeze.freeze")){
+            Player victim = Bukkit.getPlayerExact(args[0]);
+            if (victim != null && victim.isOnline()) {
+                TextComponent button = new TextComponent();
+                button.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/freeze " + victim.getDisplayName()));
+                TextComponent victimName = new TextComponent(victim.getDisplayName());
+                victimName.setColor(getColor(Config.get().getString("PlayerNameColor")));
+                if (!victim.getScoreboardTags().contains("Frozen")) {
+                    //ЗАМОРАЖИВАЕМ
+                    button.setText(Config.get().getString("Button.Unfreeze.Label"));
+                    button.setColor(getColor(Config.get().getString("Button.Unfreeze.Color")));
+                    button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Config.get().getString("Button.Freeze.HoverText").replaceAll("%player-name%", victim.getDisplayName())).color(ChatColor.GRAY).create()));
+                    Map<String, TextComponent> placeholders = new HashMap<>();
+                    placeholders.put("player-name", victimName);
+                    placeholders.put("button", button);
+                    sender.spigot().sendMessage(replacePlaceholders(Config.get().getString("Freeze-form"), placeholders));
+                    victim.addScoreboardTag("Frozen");
+                } else {
+                    //ЗАМОРАЖИВАЕМ
+                    button.setText(Config.get().getString("Button.Freeze.Label"));
+                    button.setColor(getColor(Config.get().getString("Button.Freeze.Color")));
+                    button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Config.get().getString("Button.Unfreeze.HoverText").replaceAll("%player-name%", victim.getDisplayName())).color(ChatColor.GRAY).create()));
+                    Map<String, TextComponent> placeholders = new HashMap<>();
+                    placeholders.put("player-name", victimName);
+                    placeholders.put("button", button);
+                    sender.spigot().sendMessage(replacePlaceholders(Config.get().getString("Unfrozen-form"), placeholders));
+                    victim.removeScoreboardTag("Frozen");
+                }
+            } else {
+                TextComponent victimName = new TextComponent(args[0]);
+                victimName.setColor(getColor(Config.get().getString("PlayerNameColor")));
                 Map<String, TextComponent> placeholders = new HashMap<>();
-                placeholders.put("player-name",victimName);
-                placeholders.put("button",button);
-                sender.spigot().sendMessage(replacePlaceholders(Config.get().getString("Freeze-form"),placeholders));
-                victim.addScoreboardTag("Frozen");
-            }else{
-                //ЗАМОРАЖИВАЕМ
-                button.setText(Config.get().getString("Button.Freeze.Label"));
-                button.setColor(getColor(Config.get().getString("Button.Freeze.Color")));
-                button.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(Config.get().getString("Button.Unfreeze.HoverText").replaceAll("%player-name%", victim.getDisplayName())).color(ChatColor.GRAY).create()));
-                Map<String, TextComponent> placeholders = new HashMap<>();
-                placeholders.put("player-name",victimName);
-                placeholders.put("button",button);
-                sender.spigot().sendMessage(replacePlaceholders(Config.get().getString("Unfrozen-form"),placeholders));
-                victim.removeScoreboardTag("Frozen");
+                placeholders.put("player-name", victimName);
+                sender.spigot().sendMessage(replacePlaceholders(Config.get().getString("Offline"), placeholders));
             }
+            return false;
         }else{
-            TextComponent victimName = new TextComponent(args[0]);
-            victimName.setColor(getColor(Config.get().getString("PlayerNameColor")));
-            Map<String, TextComponent> placeholders = new HashMap<>();
-            placeholders.put("player-name",victimName);
-            sender.spigot().sendMessage(replacePlaceholders(Config.get().getString("Offline"),placeholders));
+            sender.sendMessage(ChatColor.RED+Config.get().getString("Permission"));
+            return false;
         }
-        return false;
     }
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {

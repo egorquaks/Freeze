@@ -1,0 +1,13 @@
+Freeze-form: "%player-name% has been frozen! %button%"
+Unfrozen-form: "%player-name% has been unfrozen! %button%"
+Offline: "%player-name% is offline."
+PlayerNameColor: "AQUA"
+Button:
+  Freeze:
+    Label: "[Freeze]"
+    Color: "RED"
+    HoverText: "Freeze %player-name%"
+  Unfreeze:
+    Label: "[Unfreeze]"
+    Color: "GREEN"
+    HoverText: "Unfreeze %player-name%"

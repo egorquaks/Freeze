@@ -1,4 +1,7 @@
 name: Freeze
 version: '${project.version}'
-main: by.quaks.freeze.Freeze
+main: by.quaks.freeze.FreezeMain
 api-version: 1.19
+commands:
+  freeze:
+    description: Freezes somebody
